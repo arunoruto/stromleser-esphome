@@ -1,0 +1,55 @@
+number:
+  - platform: template
+    name: "Meter PIN"
+    id: meter_pin
+    min_value: 0
+    max_value: 9999
+    step: 1
+    mode: box
+    icon: "mdi:lock-question"
+    optimistic: true
+    restore_value: true
+    initial_value: 0000
+script:
+  - id: enter_pin_sequence
+    mode: exclusive
+    then:
+      - lambda: |-
+          int pin = (int)id(meter_pin).state;
+          int digits[4];
+          digits[0] = (pin / 1000) % 10;
+          digits[1] = (pin / 100) % 10;
+          digits[2] = (pin / 10) % 10;
+          digits[3] = pin % 10;
+          ESP_LOGI("pin_script", "Starting PIN entry for: %04d", pin);
+
+          auto call_wake = id(ir_led).turn_on();
+          call_wake.perform();
+          delay(200);
+          auto call_wake2 = id(ir_led).turn_off();
+          call_wake2.perform();
+
+          ESP_LOGI("pin_script", "Waiting for display tests to finish...");
+          delay(5000);
+
+          for (int i = 0; i < 4; i++) {
+            int count = digits[i];
+            ESP_LOGD("pin_script", "Entering digit %d: pulsing %d times", i+1, count);
+            for (int j = 0; j < count; j++) {
+              auto call = id(ir_led).turn_on();
+              call.perform();
+              delay(200);
+              auto call2 = id(ir_led).turn_off();
+              call2.perform();
+              delay(300);
+            }
+            ESP_LOGD("pin_script", "Waiting 3.5s for meter to auto-advance...");
+            delay(3500);
+          }
+          ESP_LOGI("pin_script", "PIN sequence complete!");
+button:
+  - platform: template
+    name: "Run Auto-Unlock (Experimental)"
+    icon: "mdi:lock-open-variant"
+    on_press:
+      - script.execute: enter_pin_sequence

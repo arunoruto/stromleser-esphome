@@ -1,0 +1,20 @@
+output:
+  - platform: gpio
+    pin: GPIO1
+    id: ir_led
+    inverted: true
+button:
+  - platform: template
+    name: "Short Pulse (0.5s)"
+    icon: "mdi:flash"
+    on_press:
+      - output.turn_on: ir_led
+      - delay: 500ms
+      - output.turn_off: ir_led
+  - platform: template
+    name: "Long Pulse (5s)"
+    icon: "mdi:flashlight"
+    on_press:
+      - output.turn_on: ir_led
+      - delay: 5s
+      - output.turn_off: ir_led

@@ -1,0 +1,91 @@
+uart:
+  id: uart_meter
+  rx_pin: GPIO3
+  baud_rate: 9600
+  data_bits: 8
+  parity: NONE
+  stop_bits: 1
+# =========================================================
+# SML PARSER
+# =========================================================
+sml:
+  id: e320_meter
+  uart_id: uart_meter
+# =========================================================
+# GLOBALS (Tracking the last update time)
+# =========================================================
+globals:
+  - id: last_power_update
+    type: uint32_t
+    initial_value: '0'
+# =========================================================
+# NUMERIC SENSORS
+# =========================================================
+sensor:
+  # Current Power (Power_in)
+  - platform: sml
+    name: "Current Power"
+    id: current_power
+    sml_id: e320_meter
+    obis_code: "1-0:16.7.0"
+    unit_of_measurement: "W"
+    accuracy_decimals: 0
+    device_class: power
+    state_class: measurement
+    on_value:
+      then:
+        - lambda: 'id(last_power_update) = millis();'
+  # Total Consumed (Total_in)
+  - platform: sml
+    name: "Total Consumed"
+    sml_id: e320_meter
+    obis_code: "1-0:1.8.0"
+    unit_of_measurement: "kWh"
+    accuracy_decimals: 3
+    device_class: energy
+    state_class: total_increasing
+    filters:
+      - lambda: |-
+          // Check if power was EVER updated AND if it happened in the last few seconds
+          if (id(last_power_update) > 0 && (millis() - id(last_power_update) < 2000)) {
+            return x * 0.0001f;
+          }
+          // Default/Safe fallback
+          return x;
+  # Total Delivered (Total_out - e.g., if you have balcony solar)
+  - platform: sml
+    name: "Total Delivered"
+    sml_id: e320_meter
+    obis_code: "1-0:2.8.0"
+    unit_of_measurement: "kWh"
+    accuracy_decimals: 3
+    device_class: energy
+    state_class: total_increasing
+    filters:
+      - lambda: |-
+          // Check if power was EVER updated AND if it happened in the last few seconds
+          if (id(last_power_update) > 0 && (millis() - id(last_power_update) < 2000)) {
+            return x * 0.0001f;
+          }
+          // Default/Safe fallback
+          return x;
+# =========================================================
+# TEXT SENSORS
+# =========================================================
+text_sensor:
+  - platform: sml
+    name: "Server ID"
+    sml_id: e320_meter
+    obis_code: "1-0:96.1.0"
+    filters:
+      - lambda: |-
+          if (x.length() >= 10) {
+            int medium = x[1];
+            std::string mfg = x.substr(2, 3);
+            int pad = x[5];
+            uint32_t serial = ((uint8_t)x[6] << 24) | ((uint8_t)x[7] << 16) | ((uint8_t)x[8] << 8) | (uint8_t)x[9];
+            char buf[64];
+            snprintf(buf, sizeof(buf), "%d %s %02d %04u %04u", medium, mfg.c_str(), pad, serial / 10000, serial % 10000);
+            return std::string(buf);
+          }
+          return x;
