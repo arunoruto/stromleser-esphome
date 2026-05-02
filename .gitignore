@@ -6,6 +6,9 @@ Energy2Shelly_ESP
 secrets.yaml
 .esphome
 
+# Python
+__pycache__/
+
 # Devenv
 .devenv*
 devenv.local.nix
