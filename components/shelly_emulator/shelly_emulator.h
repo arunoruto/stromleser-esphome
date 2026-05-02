@@ -1,5 +1,9 @@
 #pragma once
 
+// Shelly 3EM Pro Emulator — ESPHome external component.
+// Architecture inspired by Energy2Shelly_ESP (TheRealMoeder).
+// https://github.com/TheRealMoeder/Energy2Shelly_ESP
+
 #include "esphome/core/component.h"
 #include "esphome/components/sensor/sensor.h"
 

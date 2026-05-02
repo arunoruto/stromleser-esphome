@@ -1,3 +1,7 @@
+// Shelly 3EM Pro Emulator — ESPHome external component.
+// Architecture inspired by Energy2Shelly_ESP (TheRealMoeder).
+// https://github.com/TheRealMoeder/Energy2Shelly_ESP
+
 #include "shelly_emulator.h"
 #include "rpc_handlers.h"
 #include "esphome/core/log.h"

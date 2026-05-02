@@ -78,6 +78,8 @@ _Note: This feature is currently experimental and timed specifically for the Lan
 
 The firmware exposes your smart meter data as a fully Shelly-compatible API so that zero-feed-in devices (Hoymiles MS-A2, Growatt NOAH/NEXA, Marstek Venus) can auto-discover it and receive real-time power measurements.
 
+> **Credits:** The Shelly API emulation is inspired by [Energy2Shelly_ESP](https://github.com/TheRealMoeder/Energy2Shelly_ESP) by TheRealMoeder. Ported from Arduino/ESPAsyncWebServer to an ESP-IDF-based ESPHome external component.
+
 ### What It Emulates
 
 | Feature | Details |

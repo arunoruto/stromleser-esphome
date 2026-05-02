@@ -1,3 +1,7 @@
+// Shelly 3EM Pro RPC response builders.
+// JSON response formats based on the Shelly Gen2 API spec as implemented in
+// Energy2Shelly_ESP (https://github.com/TheRealMoeder/Energy2Shelly_ESP).
+
 #include "rpc_handlers.h"
 #include "esphome/core/log.h"
 
