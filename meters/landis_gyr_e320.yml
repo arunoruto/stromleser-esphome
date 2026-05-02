@@ -38,6 +38,7 @@ sensor:
   # Total Consumed (Total_in)
   - platform: sml
     name: "Total Consumed"
+    id: total_consumed
     sml_id: e320_meter
     obis_code: "1-0:1.8.0"
     unit_of_measurement: "kWh"
@@ -55,6 +56,7 @@ sensor:
   # Total Delivered (Total_out - e.g., if you have balcony solar)
   - platform: sml
     name: "Total Delivered"
+    id: total_delivered
     sml_id: e320_meter
     obis_code: "1-0:2.8.0"
     unit_of_measurement: "kWh"

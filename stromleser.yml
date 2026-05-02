@@ -22,6 +22,11 @@ captive_portal:
 logger:
   level: INFO
   baud_rate: 0
+external_components:
+  - source:
+      type: local
+      path: components
+    components: [ shelly_emulator ]
 sensor:
   - platform: internal_temperature
     name: "Internal Temperature"
@@ -30,8 +35,8 @@ sensor:
     update_interval: 60s
   - platform: uptime
     name: "Uptime"
-# Example
 packages:
   # pin: !include utils/pin.yml
   interaction: !include utils/interaction.yml
   meter: !include meters/landis_gyr_e320.yml
+  shelly_emulator: !include utils/shelly_emulator.yml

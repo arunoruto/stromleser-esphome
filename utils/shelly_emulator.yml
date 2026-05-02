@@ -1,0 +1,19 @@
+# =========================================================
+# Shelly 3EM Pro Emulator
+# =========================================================
+# Exposes Shelly-compatible RPC endpoints on port 80,
+# advertises mDNS _shelly._tcp service, and listens for
+# UDP RPC on the configured port.
+#
+# Consumer compatibility:
+#   Hoymiles MS-A2, Growatt NOAH/NEXA, Marstek Venus
+# =========================================================
+
+shelly_emulator:
+  id: shelly_3em
+  phase_count: 1
+  power_offset: 0
+  udp_port: 2220
+  power_sensor: current_power
+  energy_consumed_sensor: total_consumed
+  energy_delivered_sensor: total_delivered
